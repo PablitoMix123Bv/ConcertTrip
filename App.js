@@ -1,19 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import NavigationMenu from './src/components/menu';
+import Ticket from './src/components/Ticket';
+import {COLORS} from "./src/constants/theme";
 
-export default function App() {
+const App = () => {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
-    </View>
+        <Ticket
+          artisName = "Bad Bunny" 
+          stadium = "Estadio GNP" 
+          locationPoint = "Plaza patio"
+          date = "15 de Diciembre" 
+          agency = "Qro Trips"
+          rideType = "Viaje redondo"
+          price = {600}
+        />
+      <NavigationMenu/>
+    </View>      
   );
 }
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
