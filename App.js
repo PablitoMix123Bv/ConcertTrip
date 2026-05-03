@@ -1,34 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import NavigationMenu from './src/components/menu';
-import Ticket from './src/components/Ticket';
-import {COLORS} from "./src/constants/theme";
+import  React, { useContext } from 'react';
+import { AuthProvider } from './src/context/AuthContext';
+// import LoginScreen from './src/screens/LoginScreen';
+import MyTicketsScreen from './src/screens/MyTicketsScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {ActivityIndicator, View} from 'react-native';
+import {AuthContext} from './src/context/AuthContext';
 
-const App = () => {
+const RootNavigation = () => {
+  const { user , loading } = useContext( AuthContext );
+  
+  // Pantalla de carga
+  if (loading) {
+    // return (
+    //   <View style = {{flex: 1, justifyContent: 'center'}}>
+    //     <ActivityIndicator size = "large" color = "#6200EE"/>
+    //   </View>
+    // );
+    return null;
+  }
+  
+  return <MyTicketsScreen/>;
+  // return user ? <MyTicketsScreen/> : <LoginScreen/>
+};
+export default function App() {
+  //Extracción de los datos de "vigilante"
+  // const {user, loading} = useContext(AuthContext);
+
+  // 2. Ternario de Navegación (La puerta lógica)
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-        <Ticket
-          artisName = "Bad Bunny" 
-          stadium = "Estadio GNP" 
-          locationPoint = "Plaza patio"
-          date = "15 de Diciembre" 
-          agency = "Qro Trips"
-          rideType = "Viaje redondo"
-          price = {600}
-        />
-      <NavigationMenu/>
-    </View>      
-  );
+    <AuthProvider>
+      <SafeAreaProvider>
+        <RootNavigation/>        
+      </SafeAreaProvider>
+    </AuthProvider>
+  );  
 }
-
-export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
