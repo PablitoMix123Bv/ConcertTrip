@@ -1,12 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
+import { AuthProvider, AuthContext } from './src/context/AuthContext';
+import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+// ================ PANTALLAS USUARIO AUTENTICADO  ================ 
+import AgencyDetailScreen from './src/screens/AgencyDetailScreen';
+import MyTicketsScreen from './src/screens/MyTicketsScreen';
 
-import { AuthProvider, AuthContext } from './src/context/AuthContext';
-
-// ─── Pantallas ────────────────────────────────────────────────────────────────
+// ─── Pantallas (usaurios no autenticados) ────────────────────────────────────────────────────────────────
 import SplashScreen from './src/screens/SplashScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -29,11 +31,8 @@ const AuthStack = () => (
 // ─── Navegación para usuarios autenticados ────────────────────────────────────
 const AppStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    {/* Pantalla temporal mientras no tienes el Home */}
-    <Stack.Screen
-      name="Placeholder"
-      component={() => <View style={{ flex: 1, backgroundColor: '#EEF3FF' }} />}
-    />
+      <Stack.Screen name = "MisTickets" component = {MyTicketsScreen}/>
+      <Stack.Screen name = "DetalleAgencia" component = {AgencyDetailScreen}/>
   </Stack.Navigator>
 );
 
@@ -55,7 +54,7 @@ const RootNavigation = () => {
   // Si no → pantallas de auth (Welcome, Login, Register)
   return (
     <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
+      {user ? <AppStack /> : <AppStack/>}
     </NavigationContainer>
   );
 };
