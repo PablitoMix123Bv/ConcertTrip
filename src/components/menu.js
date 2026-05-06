@@ -11,16 +11,16 @@ const NavigationMenu = () => {
     }   
     return(
         <View style = {styles.menuContainer}>
-            <TouchableOpacity onPress = {() => handleActiveTab('home')} style = {[styles.touchableStyles,{backgroundColor: activeTab === 'home' ? COLORS.background : '#ececec',}]}>
+            <TouchableOpacity onPress = {() => handleActiveTab('home')} style = {[styles.touchableStyles,{backgroundColor: activeTab === 'home' ? COLORS.borders : '#ececec',}]}>
                 <Ionicons name = "home" size = {SIZES.MenuIconSize} color = {activeTab === 'home' ? COLORS.primary : '#9e9e9e'}/>
             </TouchableOpacity>
-            <TouchableOpacity onPress = {() => handleActiveTab('search')} style = {[styles.touchableStyles, {backgroundColor: activeTab === 'search' ? COLORS.background : '#ececec'}]}>
+            <TouchableOpacity onPress = {() => handleActiveTab('search')} style = {[styles.touchableStyles, {backgroundColor: activeTab === 'search' ? COLORS.borders : '#ececec'}]}>
                 <Ionicons name = "search" size = {SIZES.MenuIconSize} color = {activeTab === 'search' ? COLORS.primary : '#9e9e9e'}/>
             </TouchableOpacity>
-            <TouchableOpacity onPress = {() => handleActiveTab('ticket')} style = {[styles.touchableStyles, {backgroundColor: activeTab === 'ticket' ? COLORS.background : '#ececec'}]}>
+            <TouchableOpacity onPress = {() => handleActiveTab('ticket')} style = {[styles.touchableStyles, {backgroundColor: activeTab === 'ticket' ? COLORS.borders : '#ececec'}]}>
                 <Ionicons name = "ticket" size = {SIZES.MenuIconSize} color = {activeTab === 'ticket' ? COLORS.primary : '#9e9e9e'}/>
             </TouchableOpacity>
-            <TouchableOpacity onPress = {() => handleActiveTab('person')} style = {[styles.touchableStyles, {backgroundColor: activeTab === 'person' ? COLORS.background : '#ececec'}]}>
+            <TouchableOpacity onPress = {() => handleActiveTab('person')} style = {[styles.touchableStyles, {backgroundColor: activeTab === 'person' ? COLORS.borders : '#ececec'}]}>
                 <Ionicons name = "person" size = {SIZES.MenuIconSize} color = {activeTab === 'person' ? COLORS.primary : '#9e9e9e'}/>
             </TouchableOpacity>
         </View>

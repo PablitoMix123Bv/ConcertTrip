@@ -8,7 +8,7 @@ const globalStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     scrollContent: {
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.borders,
         // paddingBottom: 80,
         width: "100%",
     }
