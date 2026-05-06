@@ -9,5 +9,6 @@ export const COLORS = {
 export const SIZES = {
     title: 36,
     ticketTitle: 24,
-    text: 18
+    text: 18,
+    MenuIconSize: 24,
 };

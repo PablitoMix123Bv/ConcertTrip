@@ -1,15 +1,16 @@
 import { StyleSheet, ScrollView, View } from 'react-native';
 import NavigationMenu from '../components/menu';
 import Ticket from '../components/Ticket';
+import globalStyles from '../styles/globalStyles';
 import {COLORS} from "../constants/theme";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 
 const MyTicketsScreen = () => {
   return (
-    <SafeAreaView style = {styles.container}>
+    <SafeAreaView style = {globalStyles.container}>
         {/* <View style={styles.container}> */}
-            <ScrollView style = {[styles.scrollContent]} contentContainerStyle = {{alignItems: 'center'}}>
+            <ScrollView style = {[globalStyles.scrollContent]} contentContainerStyle = {{alignItems: 'center'}}>
                 <Ticket
                     artisName = "Bad Bunny" 
                     stadium = "Estadio GNP" 
@@ -27,17 +28,17 @@ const MyTicketsScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scrollContent: {
-    paddingBottom: 80,
-    width: "100%",
-    // backgroundColor: "green"
-  }
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: COLORS.background,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
+  // scrollContent: {
+  //   paddingBottom: 80,
+  //   width: "100%",
+  //   // backgroundColor: "green"
+  // }
 });
 
 export default MyTicketsScreen;
