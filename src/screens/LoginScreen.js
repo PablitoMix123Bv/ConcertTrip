@@ -1,9 +1,9 @@
 import React, { useState, useContext, useRef } from 'react';
 import {
-    View, Text, Image, StyleSheet, TouchableOpacity, Animated, Dimensions, StatusBar,
-    KeyboardAvoidingView, Platform, ActivityIndicator, Alert,
+    View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Animated,
+    Dimensions, StatusBar, KeyboardAvoidingView, Platform, ActivityIndicator, Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
 import { InputField } from '../constants/input';
 import { AuthContext } from '../context/AuthContext';
@@ -13,15 +13,10 @@ const { width, height } = Dimensions.get('window');
 export default function LoginScreen({ navigation }) {
     const { login } = useContext(AuthContext);
 
-    // ── Estado del formulario ─────────────────────────────────────────────────
-    const [form, setForm] = useState({
-        email: '',
-        password: '',
-    });
+    const [form, setForm] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
-    // ── Animación de entrada — igual que RegisterScreen ───────────────────────
     const cardAnim = useRef(new Animated.Value(30)).current;
     const cardOpacity = useRef(new Animated.Value(0)).current;
 
@@ -32,7 +27,6 @@ export default function LoginScreen({ navigation }) {
         ]).start();
     }, []);
 
-    // ── Validación local ──────────────────────────────────────────────────────
     const validate = () => {
         const newErrors = {};
         if (!form.email.trim())
@@ -46,42 +40,27 @@ export default function LoginScreen({ navigation }) {
         return newErrors;
     };
 
-    // ── Envío — llama al login del AuthContext de tu compañero ────────────────
     const handleLogin = async () => {
         const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
+        if (Object.keys(validationErrors).length > 0) { setErrors(validationErrors); return; }
         setErrors({});
         setLoading(true);
-
         try {
-            // login() viene del AuthContext — valida con Firebase Auth
             await login(form.email.trim(), form.password);
-            // Si el login es exitoso, onAuthStateChanged en AuthContext
-            // detecta al usuario y App.js navega automáticamente al AppStack
         } catch (error) {
-            // Traducimos los códigos de error de Firebase a español
             let mensaje = 'Ocurrió un error. Intenta de nuevo.';
-            if (
-                error.code === 'auth/user-not-found' ||
+            if (error.code === 'auth/user-not-found' ||
                 error.code === 'auth/wrong-password' ||
-                error.code === 'auth/invalid-credential'
-            ) {
+                error.code === 'auth/invalid-credential')
                 mensaje = 'Correo o contraseña incorrectos.';
-            } else if (error.code === 'auth/too-many-requests') {
+            else if (error.code === 'auth/too-many-requests')
                 mensaje = 'Demasiados intentos. Espera un momento.';
-            } else if (error.code === 'auth/network-request-failed') {
+            else if (error.code === 'auth/network-request-failed')
                 mensaje = 'Sin conexión. Revisa tu internet.';
-            } else if (error.message) {
-                // Errores del validateLoginData de authValidation.js
+            else if (error.message)
                 mensaje = error.message;
-            }
             Alert.alert('Error al iniciar sesión', mensaje);
-        } finally {
-            setLoading(false);
-        }
+        } finally { setLoading(false); }
     };
 
     const updateField = (field, value) => {
@@ -90,9 +69,8 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.safe}>
+        <View style={styles.safe}>
             <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
-
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -109,17 +87,17 @@ export default function LoginScreen({ navigation }) {
                     <Text style={styles.headerSub}>Bienvenido de vuelta</Text>
                 </View>
 
-                {/* ── Card del formulario ── */}
                 <Animated.View style={[
                     styles.card,
                     { transform: [{ translateY: cardAnim }], opacity: cardOpacity }
                 ]}>
-                    <View style={styles.cardContent}>
-
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.scrollContent}
+                        keyboardShouldPersistTaps="handled"
+                    >
                         <Text style={styles.cardTitle}>Inicia sesión</Text>
-                        <Text style={styles.cardSub}>
-                            Ingresa tus datos para continuar
-                        </Text>
+                        <Text style={styles.cardSub}>Ingresa tus datos para continuar</Text>
 
                         <InputField
                             label="Correo electrónico"
@@ -127,34 +105,26 @@ export default function LoginScreen({ navigation }) {
                             onChangeText={v => updateField('email', v)}
                             placeholder="correo@ejemplo.com"
                             keyboardType="email-address"
-                            icon="✉️"
+                            icon={<Ionicons name="mail-outline" size={18} color={COLORS.secondary} />}
                             error={errors.email}
                         />
-
                         <InputField
                             label="Contraseña"
                             value={form.password}
                             onChangeText={v => updateField('password', v)}
                             placeholder="Tu contraseña"
                             secureTextEntry
-                            icon="🔒"
+                            icon={<Ionicons name="lock-closed-outline" size={18} color={COLORS.secondary} />}
                             error={errors.password}
                         />
 
-                        {/* ¿Olvidaste tu contraseña? */}
                         <TouchableOpacity
                             style={styles.forgotRow}
-                            onPress={() => Alert.alert(
-                                'Recuperar contraseña',
-                                'Función disponible próximamente.'
-                            )}
+                            onPress={() => Alert.alert('Recuperar contraseña', 'Función disponible próximamente.')}
                         >
-                            <Text style={styles.forgotText}>
-                                ¿Olvidaste tu contraseña?
-                            </Text>
+                            <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
                         </TouchableOpacity>
 
-                        {/* Botón principal */}
                         <TouchableOpacity
                             style={[styles.btnLogin, loading && styles.btnDisabled]}
                             activeOpacity={0.85}
@@ -167,17 +137,16 @@ export default function LoginScreen({ navigation }) {
                             }
                         </TouchableOpacity>
 
-                        {/* Separador */}
                         <View style={styles.separatorRow}>
                             <View style={styles.separatorLine} />
                             <Text style={styles.separatorText}>o</Text>
                             <View style={styles.separatorLine} />
                         </View>
 
-                        {/* Link a registro */}
                         <TouchableOpacity
                             style={styles.registerRow}
                             onPress={() => navigation?.navigate('Register')}
+                            activeOpacity={0.7}
                         >
                             <Text style={styles.registerText}>
                                 ¿No tienes cuenta?{' '}
@@ -185,10 +154,10 @@ export default function LoginScreen({ navigation }) {
                             </Text>
                         </TouchableOpacity>
 
-                    </View>
+                    </ScrollView>
                 </Animated.View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -196,128 +165,116 @@ const styles = StyleSheet.create({
     safe: {
         flex: 1,
         backgroundColor: COLORS.primary,
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 44,
     },
 
-    // ── Header ────────────────────────────────────────────────────────────────
-    header: {
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 28,
-    },
+    header: { alignItems: 'center', paddingTop: 24, paddingBottom: 32 },
     logoCircle: {
-        width: 130,
-        height: 130,
-        borderRadius: 65,
+        width: 130, height: 130, borderRadius: 65,
         backgroundColor: 'rgba(255,255,255,0.15)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 2,
-        borderColor: 'rgba(255,255,255,0.3)',
-        overflow: 'hidden',
+        alignItems: 'center', justifyContent: 'center',
+        borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)',
+        overflow: 'hidden', marginBottom: 14,
     },
     logoImage: {
         width: 140,
-        height: 140,
+        height: 140
     },
     appName: {
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: '700',
         color: COLORS.white,
-        letterSpacing: -0.3,
+        letterSpacing: -0.3
     },
     headerSub: {
         fontSize: 13,
         color: 'rgba(255,255,255,0.65)',
-        marginTop: 3,
+        marginTop: 4
     },
-
-    // ── Card ──────────────────────────────────────────────────────────────────
     card: {
         flex: 1,
-        backgroundColor: COLORS.backgroundBase,
-        borderTopLeftRadius: 28,
-        borderTopRightRadius: 28,
-        overflow: 'hidden',
+        backgroundColor: COLORS.background,
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 8,
     },
-    cardContent: {
-        padding: 28,
+    scrollContent: {
+        paddingHorizontal: 28,
+        paddingTop: 32,
         paddingBottom: 40,
+        flexGrow: 1,
     },
     cardTitle: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: '700',
         color: COLORS.textPrimary,
-        marginBottom: 4,
+        marginBottom: 6
     },
     cardSub: {
         fontSize: 13,
         color: COLORS.textSecondary,
-        marginBottom: 24,
-        lineHeight: 18,
+        marginBottom: 28,
+        lineHeight: 19
     },
 
-    // ── Olvidé contraseña ─────────────────────────────────────────────────────
     forgotRow: {
         alignSelf: 'flex-end',
         marginTop: -8,
-        marginBottom: 20,
+        marginBottom: 20
     },
     forgotText: {
         fontSize: 13,
         color: COLORS.primary,
-        fontWeight: '600',
+        fontWeight: '600'
     },
-
-    // ── Botón principal ───────────────────────────────────────────────────────
     btnLogin: {
-        backgroundColor: COLORS.primaryDark,
-        borderRadius: 14,
-        paddingVertical: 16,
-        alignItems: 'center',
-        marginBottom: 20,
+        backgroundColor: COLORS.primary,
+        borderRadius: 14, paddingVertical: 16,
+        alignItems: 'center', marginBottom: 20,
         shadowColor: COLORS.primaryDark,
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 4,
+        shadowOpacity: 0.25, shadowRadius: 8, elevation: 4,
     },
     btnDisabled: {
-        opacity: 0.7,
+        opacity: 0.7
     },
     btnLoginText: {
         fontSize: 16,
         fontWeight: '700',
         color: COLORS.white,
-        letterSpacing: 0.2,
+        letterSpacing: 0.3
     },
-
-    // ── Separador ─────────────────────────────────────────────────────────────
     separatorRow: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
-        gap: 12,
+        gap: 12
     },
     separatorLine: {
         flex: 1,
         height: 1,
-        backgroundColor: COLORS.borders,
+        backgroundColor: COLORS.borders
     },
     separatorText: {
         fontSize: 13,
-        color: COLORS.textSecondary,
+        color: COLORS.textSecondary
     },
-
-    // ── Link a registro ───────────────────────────────────────────────────────
     registerRow: {
         alignItems: 'center',
+        paddingVertical: 8
     },
     registerText: {
         fontSize: 14,
         color: COLORS.textSecondary,
+        fontWeight: '500'
     },
     registerLink: {
+        fontSize: 14,
         color: COLORS.primary,
-        fontWeight: '700',
+        fontWeight: '700'
     },
 });
