@@ -12,7 +12,7 @@ const TabNavigator = ({ texto }) => {
 const styles = StyleSheet.create({
     TabNavigatorContainer: {
         borderRadius: 10,
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.primaryDark,
         paddingVertical: 5,
         paddingHorizontal: 10,
         alignSelf: "baseline"

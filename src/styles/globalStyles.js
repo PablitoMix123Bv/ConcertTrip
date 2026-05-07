@@ -9,7 +9,6 @@ const globalStyles = StyleSheet.create({
     },
     scrollContent: {
         backgroundColor: COLORS.background,
-        // paddingBottom: 80,
         width: "100%",
     }
 });
