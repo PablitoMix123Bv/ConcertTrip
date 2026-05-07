@@ -30,9 +30,9 @@ const AuthStack = () => (
 
 // ─── Navegación para usuarios autenticados ────────────────────────────────────
 const AppStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name = "MisTickets" component = {MyTicketsScreen}/>
+  <Stack.Navigator screenOptions={{ headerShown: false }}>      
       <Stack.Screen name = "DetalleAgencia" component = {AgencyDetailScreen}/>
+      <Stack.Screen name = "MisTickets" component = {MyTicketsScreen}/>
   </Stack.Navigator>
 );
 
