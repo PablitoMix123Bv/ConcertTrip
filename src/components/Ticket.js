@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image, Text } from "react-native";
-import {SIZES, COLORS} from "../constants/theme"
+import {SIZES, COLORS, COLORSCREEN} from "../constants/theme"
 
 const Ticket = ({artisName, stadium, locationPoint, date, agency, rideType, price}) => {
     return(
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         width: 40,
         borderRadius: 5,
         // position: "absolute",
-        backgroundColor: COLORS.borders,
+        backgroundColor: COLORSCREEN.background,
         borderRadius: 15,
         // left: -15
     },
