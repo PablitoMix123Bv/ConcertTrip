@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const { width, height } = Dimensions.get('window');
 
 export default function WelcomeScreen({ navigation }) {
-    // ─── Animaciones ────────────────────────────────────────────────────────────
+
     const logoOpacity = useRef(new Animated.Value(0)).current;
     const logoScale = useRef(new Animated.Value(0.8)).current;
     const titleOpacity = useRef(new Animated.Value(0)).current;
@@ -24,7 +24,6 @@ export default function WelcomeScreen({ navigation }) {
                 Animated.spring(circleScale1, { toValue: 1, friction: 6, useNativeDriver: true }),
                 Animated.spring(circleScale2, { toValue: 1, friction: 6, delay: 100, useNativeDriver: true }),
             ]),
-            // Logo entra con scale + fade
             Animated.parallel([
                 Animated.timing(logoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
                 Animated.spring(logoScale, { toValue: 1, friction: 7, useNativeDriver: true }),
@@ -48,7 +47,6 @@ export default function WelcomeScreen({ navigation }) {
         <SafeAreaView style={styles.safe}>
             <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
 
-            {/* ── Fondo con gradiente manual usando capas ── */}
             <View style={styles.background}>
 
                 {/* Círculos decorativos de fondo */}
@@ -91,7 +89,7 @@ export default function WelcomeScreen({ navigation }) {
                         El viaje también es parte del show
                     </Animated.Text>
 
-                    {/* Detalle decorativo — puntitos */}
+                    {/* Puntitos decorativos */}
                     <Animated.View style={[styles.dotsRow, { opacity: sloganOpacity }]}>
                         {[0, 1, 2].map(i => (
                             <View
@@ -126,7 +124,7 @@ export default function WelcomeScreen({ navigation }) {
                         <Text style={styles.btnSecondaryText}>Iniciar sesión</Text>
                     </TouchableOpacity>
 
-                    {/* Texto legal pequeño */}
+                    {/* Texto terminos y condiciones*/}
                     <Text style={styles.legalText}>
                         Al continuar aceptas nuestros{' '}
                         <Text style={styles.legalLink}>Términos y condiciones</Text>
@@ -151,7 +149,7 @@ const styles = StyleSheet.create({
         paddingBottom: 40,
     },
 
-    // ── Círculos decorativos ──────────────────────────────────────────────────
+    // Círculos decorativos 
     circleTop: {
         position: 'absolute',
         top: -height * 0.08,
@@ -173,7 +171,7 @@ const styles = StyleSheet.create({
         opacity: 0.4,
     },
 
-    // ── Contenido central ─────────────────────────────────────────────────────
+    // Contenido central
     content: {
         flex: 1,
         alignItems: 'center',
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
     },
 
-    // ── Logo ──────────────────────────────────────────────────────────────────
+    // Logo
     logoContainer: {
         marginBottom: 24,
     },
@@ -200,7 +198,7 @@ const styles = StyleSheet.create({
         width: 140,
         height: 140,
     },
-    // ── Tipografía ────────────────────────────────────────────────────────────
+    // Tipografía
     appName: {
         fontSize: 32,
         fontWeight: '700',
@@ -215,7 +213,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
 
-    // ── Puntitos decorativos ──────────────────────────────────────────────────
+    // Puntitos decorativos
     dotsRow: {
         flexDirection: 'row',
         gap: 6,
@@ -231,7 +229,7 @@ const styles = StyleSheet.create({
         width: 18,
     },
 
-    // ── Botones ───────────────────────────────────────────────────────────────
+    // Botones
     buttonsContainer: {
         width: '100%',
         paddingHorizontal: 32,

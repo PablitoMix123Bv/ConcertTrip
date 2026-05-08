@@ -13,13 +13,13 @@ export default function SplashScreen({ onFinish }) {
     const barOpacity = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        // 1. Contenido (logo + texto) sube y aparece juntos — simple y elegante
+        // 1. Contenido (logo + texto) sube y aparece juntos
         Animated.parallel([
             Animated.timing(contentY, { toValue: 0, duration: 700, useNativeDriver: true }),
             Animated.timing(contentOp, { toValue: 1, duration: 700, useNativeDriver: true }),
         ]).start();
 
-        // 2. Barra de progreso aparece y se llena — usa useNativeDriver: false
+        // 2. Barra de progreso aparece y se llena 
         //    porque anima 'width' que no es soportado por el driver nativo
         Animated.sequence([
             Animated.timing(barOpacity, {
@@ -39,7 +39,7 @@ export default function SplashScreen({ onFinish }) {
         });
     }, []);
 
-    // Interpolamos el valor numérico (0-100) a porcentaje de ancho
+    // Se interpola el valor numérico (0-100) a porcentaje de ancho
     const barWidthInterpolated = barWidth.interpolate({
         inputRange: [0, 100],
         outputRange: ['0%', '100%'],
@@ -49,7 +49,6 @@ export default function SplashScreen({ onFinish }) {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
 
-            {/* ── Contenido central — logo + nombre + slogan ── */}
             <Animated.View style={[
                 styles.content,
                 {
@@ -57,7 +56,7 @@ export default function SplashScreen({ onFinish }) {
                     transform: [{ translateY: contentY }],
                 }
             ]}>
-                {/* Círculo del logo — mismo tamaño y estilo que WelcomeScreen */}
+
                 <View style={styles.logoCircle}>
                     <Image
                         source={require('../../assets/ConcerTripLogo.png')}
@@ -70,7 +69,7 @@ export default function SplashScreen({ onFinish }) {
                 <Text style={styles.slogan}>El viaje también es parte del show</Text>
             </Animated.View>
 
-            {/* ── Barra de progreso en la parte baja ── */}
+            {/* Barra de progreso  */}
             <Animated.View style={[styles.barWrapper, { opacity: barOpacity }]}>
                 <View style={styles.barTrack}>
                     <Animated.View style={[styles.barFill, { width: barWidthInterpolated }]} />
@@ -85,20 +84,18 @@ export default function SplashScreen({ onFinish }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.primary,  // fondo azul liso, sin círculos
+        backgroundColor: COLORS.primary,
         alignItems: 'center',
-        justifyContent: 'center',         // todo centrado verticalmente
+        justifyContent: 'center',
         paddingBottom: 60,
     },
 
-    // ── Bloque central ────────────────────────────────────────────────────────
     content: {
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
     },
 
-    // ── Logo — igual que en WelcomeScreen ────────────────────────────────────
     logoContainer: {
         marginBottom: 24,
     },
@@ -117,7 +114,7 @@ const styles = StyleSheet.create({
         width: 140,
         height: 140,
     },
-    // ── Texto ─────────────────────────────────────────────────────────────────
+    // Texto
     appName: {
         fontSize: 32,
         fontWeight: '700',
@@ -133,7 +130,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
     },
 
-    // ── Barra de progreso ─────────────────────────────────────────────────────
+    // Barra de progreso     
     barWrapper: {
         width: '100%',
         paddingHorizontal: 48,
@@ -149,7 +146,7 @@ const styles = StyleSheet.create({
     },
     barFill: {
         height: '100%',
-        backgroundColor: COLORS.gold,     // dorado — consistente con la paleta
+        backgroundColor: COLORS.gold,
         borderRadius: 2,
     },
     loadingText: {

@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 
-// ─── Pantallas 
+// Pantallas 
 import SplashScreen from './src/screens/SplashScreen';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -14,7 +14,7 @@ import LoginScreen from './src/screens/LoginScreen';
 
 const Stack = createStackNavigator();
 
-// ─── Navegación para usuarios NO autenticados 
+// Navegación para usuarios NO autenticados 
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Welcome" component={WelcomeScreen} />
@@ -23,7 +23,7 @@ const AuthStack = () => (
   </Stack.Navigator>
 );
 
-// ─── Navegación para usuarios autenticados
+// Navegación para usuarios autenticados
 const AppStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     {/* Pantalla temporal mientras no tienes el Home */}

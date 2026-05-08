@@ -92,7 +92,6 @@ export default function RegisterScreen({ navigation }) {
             <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
 
-                {/* ── Header azul ── */}
                 <View style={styles.header}>
                     <View style={styles.logoCircle}>
                         <Image source={require('../../assets/ConcerTripLogo.png')}
