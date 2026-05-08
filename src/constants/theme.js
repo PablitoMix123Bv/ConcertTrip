@@ -17,5 +17,8 @@ export const SIZES = {
     title: 36,
     ticketTitle: 24,
     text: 18,
+    // Tamaño de iconos
     MenuIconSize: 24,
+    // Margen para el contenido
+    MarginHorizontal: 30
 };

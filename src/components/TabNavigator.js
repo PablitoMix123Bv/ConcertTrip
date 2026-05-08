@@ -1,25 +1,34 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {COLORS} from '../constants/theme.js';
 
-const TabNavigator = ({ texto }) => {
+const TabNavigator = ({ texto , onPress, estaActivo }) => {
     return(
-        <View style = {styles.TabNavigatorContainer}>
-            <Text style = {styles.txtTab}>{texto}</Text>
-        </View>
+        <TouchableOpacity
+            onPress = {onPress}
+            style = {[styles.TabNavigatorContainer, estaActivo && styles.tabActivo]}
+        >
+            <Text style = {estaActivo ? styles.textoClaro : styles.textoOscuro}>{texto}</Text>
+        </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
     TabNavigatorContainer: {
-        borderRadius: 10,
-        backgroundColor: COLORS.primaryDark,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        alignSelf: "baseline"
+        borderRadius: 20,
+        backgroundColor: COLORS.secondary,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
     },
-    txtTab: {
+    tabActivo: {
+        backgroundColor: COLORS.primaryDark
+    },
+    textoClaro: {
         fontWeight: "bold",
-        color: "#fff"
+        color: COLORS.textSecondary
+    },
+    textoOscuro: {
+        color: COLORS.primaryDark,
+        fontWeight: "bold"
     }
 });
 export default TabNavigator;
