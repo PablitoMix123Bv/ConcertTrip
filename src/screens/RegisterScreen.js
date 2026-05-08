@@ -4,18 +4,16 @@ import {
     Dimensions, StatusBar, KeyboardAvoidingView, Platform, ActivityIndicator,
     Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from "../constants/theme";
-import { InputField, inputStyles } from "../constants/input";
+import { InputField } from "../constants/input";
+import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../context/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
-// ─── Pantalla principal 
 export default function RegisterScreen({ navigation }) {
     const { signUp } = useContext(AuthContext);
 
-    // ── Estado del formulario 
     const [form, setForm] = useState({
         nombre: '',
         email: '',
@@ -90,46 +88,32 @@ export default function RegisterScreen({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.safe}>
+        <View style={styles.safe}>
             <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
 
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            >
                 <View style={styles.header}>
                     <View style={styles.logoCircle}>
-                        <Image
-                            source={require('../../assets/ConcerTripLogo.png')}
-                            style={styles.logoImage}
-                            resizeMode="cover"
-                        />
+                        <Image source={require('../../assets/ConcerTripLogo.png')}
+                            style={styles.logoImage} resizeMode="cover" />
                     </View>
                     <Text style={styles.appName}>ConcertTrip</Text>
                     <Text style={styles.headerSub}>Crea tu cuenta</Text>
                 </View>
 
-                {/* ── Card del formulario ── */}
-                <Animated.View style={[
-                    styles.card,
-                    { transform: [{ translateY: cardAnim }], opacity: cardOpacity }
-                ]}>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={styles.scrollContent}
-                        keyboardShouldPersistTaps="handled"
-                    >
+                <Animated.View style={[styles.card, { transform: [{ translateY: cardAnim }], opacity: cardOpacity }]}>
+                    <ScrollView showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+
                         <Text style={styles.cardTitle}>Datos de tu cuenta</Text>
-                        <Text style={styles.cardSub}>
-                            Solo necesitamos lo básico para comenzar
-                        </Text>
+                        <Text style={styles.cardSub}>Solo necesitamos lo básico para comenzar</Text>
 
                         <InputField
                             label="Nombre completo"
                             value={form.nombre}
                             onChangeText={v => updateField('nombre', v)}
-                            placeholder="Ej. PablitoMix"
-                            icon="👤"
+                            placeholder="Ej. Isaac Cisneros Medina"
+                            icon={<Ionicons name="person-outline" size={18} color={COLORS.secondary} />}
                             error={errors.nombre}
                         />
                         <InputField
@@ -138,7 +122,7 @@ export default function RegisterScreen({ navigation }) {
                             onChangeText={v => updateField('email', v)}
                             placeholder="correo@ejemplo.com"
                             keyboardType="email-address"
-                            icon="✉️"
+                            icon={<Ionicons name="mail-outline" size={18} color={COLORS.secondary} />}
                             error={errors.email}
                         />
                         <InputField
@@ -146,7 +130,7 @@ export default function RegisterScreen({ navigation }) {
                             value={form.ciudad}
                             onChangeText={v => updateField('ciudad', v)}
                             placeholder="Ej. Querétaro"
-                            icon="📍"
+                            icon={<Ionicons name="location-outline" size={18} color={COLORS.secondary} />}
                             error={errors.ciudad}
                         />
                         <InputField
@@ -155,34 +139,30 @@ export default function RegisterScreen({ navigation }) {
                             onChangeText={v => updateField('password', v)}
                             placeholder="Mínimo 6 caracteres"
                             secureTextEntry
-                            icon="🔒"
+                            icon={<Ionicons name="lock-closed-outline" size={18} color={COLORS.secondary} />}
                             error={errors.password}
                         />
 
-                        {/* Nota de campos opcionales */}
                         <View style={styles.infoRow}>
+                            <Ionicons name="information-circle-outline" size={16} color={COLORS.primary} />
                             <Text style={styles.infoText}>
-                                💡 Puedes completar tu perfil después con más datos personales como teléfono, fecha de nacimiento, etc.
+                                Puedes completar tu perfil después con más datos como teléfono y fecha de nacimiento.
                             </Text>
                         </View>
 
-                        {/* Botón registrar */}
+                        {/* Botón para Registrarse*/}
                         <TouchableOpacity
                             style={[styles.btnRegister, loading && styles.btnDisabled]}
-                            activeOpacity={0.85}
-                            onPress={handleRegister}
-                            disabled={loading}
-                        >
+                            activeOpacity={0.85} onPress={handleRegister} disabled={loading}>
                             {loading
                                 ? <ActivityIndicator color={COLORS.white} />
-                                : <Text style={styles.btnRegisterText}>Crear cuenta</Text>
-                            }
+                                : <Text style={styles.btnRegisterText}>Crear cuenta</Text>}
                         </TouchableOpacity>
 
-                        {/* Link a login */}
                         <TouchableOpacity
                             style={styles.loginRow}
                             onPress={() => navigation?.navigate('Login')}
+                            activeOpacity={0.7}
                         >
                             <Text style={styles.loginText}>
                                 ¿Ya tienes cuenta?{' '}
@@ -193,7 +173,7 @@ export default function RegisterScreen({ navigation }) {
                     </ScrollView>
                 </Animated.View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -201,124 +181,92 @@ const styles = StyleSheet.create({
     safe: {
         flex: 1,
         backgroundColor: COLORS.primary,
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 44,
     },
 
-    // ── Header ────────────────────────────────────────────────────────────────
-    header: {
-        alignItems: 'center',
-        paddingTop: 20,
-        paddingBottom: 28,
-    },
-    logoContainer: {
-        marginBottom: 24,
-    },
+    header: { alignItems: 'center', paddingTop: 24, paddingBottom: 32 },
     logoCircle: {
-        width: 130,
-        height: 130,
-        borderRadius: 65,
+        width: 130, height: 130, borderRadius: 65,
         backgroundColor: 'rgba(255,255,255,0.15)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 2,
-        borderColor: 'rgba(255,255,255,0.3)',
-        overflow: 'hidden',
+        alignItems: 'center', justifyContent: 'center',
+        borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)',
+        overflow: 'hidden', marginBottom: 14,
     },
-    logoImage: {
-        width: 140,
-        height: 140,
-    },
-    appName: {
-        fontSize: 22,
-        fontWeight: '700',
-        color: COLORS.white,
-        letterSpacing: -0.3,
-    },
-    headerSub: {
-        fontSize: 13,
-        color: 'rgba(255,255,255,0.65)',
-        marginTop: 3,
-    },
+    logoImage: { width: 140, height: 140 },
+    appName: { fontSize: 24, fontWeight: '700', color: COLORS.white, letterSpacing: -0.3 },
+    headerSub: { fontSize: 13, color: 'rgba(255,255,255,0.65)', marginTop: 4 },
 
-    // ── Card formulario ───────────────────────────────────────────────────────
     card: {
         flex: 1,
-        backgroundColor: COLORS.backgroundBase,
-        borderTopLeftRadius: 28,
-        borderTopRightRadius: 28,
-        overflow: 'hidden',
+        backgroundColor: COLORS.background,
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 8,
     },
     scrollContent: {
-        padding: 28,
+        paddingHorizontal: 28,
+        paddingTop: 32,
         paddingBottom: 40,
+        flexGrow: 1,
     },
     cardTitle: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: '700',
         color: COLORS.textPrimary,
-        marginBottom: 4,
+        marginBottom: 6
     },
     cardSub: {
         fontSize: 13,
         color: COLORS.textSecondary,
-        marginBottom: 24,
-        lineHeight: 18,
+        marginBottom: 28,
+        lineHeight: 19
     },
 
-    // ── Info nota ─────────────────────────────────────────────────────────────
     infoRow: {
-        backgroundColor: COLORS.cards,
-        borderRadius: 10,
-        padding: 12,
-        marginBottom: 20,
-        borderWidth: 1,
-        borderColor: COLORS.borders,
+        flexDirection: 'row', alignItems: 'flex-start', gap: 8,
+        backgroundColor: COLORS.cards, borderRadius: 10, padding: 12,
+        marginBottom: 24, borderWidth: 1, borderColor: COLORS.borders,
     },
     infoText: {
+        flex: 1,
         fontSize: 12,
         color: COLORS.textPrimary,
-        lineHeight: 18,
+        lineHeight: 18
     },
-
-    // ── Botón principal ───────────────────────────────────────────────────────
     btnRegister: {
-        backgroundColor: COLORS.primaryDark,
-        borderRadius: 14,
-        paddingVertical: 16,
-        alignItems: 'center',
-        marginBottom: 16,
+        backgroundColor: COLORS.primary, borderRadius: 14,
+        paddingVertical: 16, alignItems: 'center', marginBottom: 20,
         shadowColor: COLORS.primaryDark,
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 4,
+        shadowOpacity: 0.25, shadowRadius: 8, elevation: 4,
     },
+
     btnDisabled: {
-        opacity: 0.7,
+        opacity: 0.7
     },
     btnRegisterText: {
         fontSize: 16,
         fontWeight: '700',
         color: COLORS.white,
-        letterSpacing: 0.2,
+        letterSpacing: 0.3
     },
-
-    // ── Link a login ──────────────────────────────────────────────────────────
     loginRow: {
-        alignItems: 'center',
+        flexDirection: 'row',
         justifyContent: 'center',
-        alignSelf: 'center',
-        width: '100%',
-        marginHorizontal: -28,
-        paddingHorizontal: 28,
+        alignItems: 'center',
+        paddingVertical: 8,
     },
     loginText: {
         fontSize: 14,
         color: COLORS.textSecondary,
-        fontWeight: '600',
-        textAlign: 'center',
-        width: '100%',
+        fontWeight: '500',
     },
     loginLink: {
+        fontSize: 14,
         color: COLORS.primary,
         fontWeight: '700',
     },

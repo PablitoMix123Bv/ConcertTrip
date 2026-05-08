@@ -11,14 +11,14 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
-    const [user, setUser] = useState(null); //Almacenamos al usuario
+    const [user, setUser] = useState(null); //Se almacenará al usuario loggeado
     const [loading, setLoading] = useState(true); //Verificación de la sesión.
 
     const login = async (email, password) => {
         const validation = validateLoginData(email, password);
 
         if (!validation.isValid) {
-            // Si la validación fala, lanzamos el error específico paa que sea mostrado dentro de la UI
+            // Si la validación falla, lanzamos el error específico para que sea mostrado dentro de la UI
             throw new Error(validation.error);
         }
 
