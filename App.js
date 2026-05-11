@@ -30,8 +30,8 @@ const AuthStack = () => (
 const AppStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     {/* Pantalla temporal mientras no tienes el Home */}
-    <Stack.Screen name="Agency" component={AgencyDetailScreen} />
-    <Stack.Screen name="MyTickets" component={MyTicketsScreen} />
+    <Stack.Screen name="Agency" component={AgencyDetailScreen}/>
+    <Stack.Screen name="MyTickets" component={MyTicketsScreen}/>
   </Stack.Navigator>
 );
 
@@ -61,7 +61,7 @@ const RootNavigation = () => {
 // ─── Raíz de la app 
 export default function App() {
   return (
-    <AuthProvider>
+    <AuthProvider>  
       <SafeAreaProvider>
         <RootNavigation />
       </SafeAreaProvider>
