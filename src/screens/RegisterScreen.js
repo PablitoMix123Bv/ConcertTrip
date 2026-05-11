@@ -8,6 +8,7 @@ import { COLORS } from "../constants/theme";
 import { InputField } from "../constants/input";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from '../context/AuthContext';
+import { validateRegisterData } from '../utils/authValidation';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,29 +34,13 @@ export default function RegisterScreen({ navigation }) {
         ]).start();
     }, []);
 
-    // ── Validación
-    const validate = () => {
-        const newErrors = {};
-        if (!form.nombre.trim())
-            newErrors.nombre = 'El nombre es obligatorio.';
-        if (!form.email.trim())
-            newErrors.email = 'El correo es obligatorio.';
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-            newErrors.email = 'El formato del correo no es válido.';
-        if (!form.ciudad.trim())
-            newErrors.ciudad = 'La ciudad es obligatoria.';
-        if (!form.password)
-            newErrors.password = 'La contraseña es obligatoria.';
-        else if (form.password.length < 6)
-            newErrors.password = 'Mínimo 6 caracteres.';
-        return newErrors;
-    };
 
     // ── Envío del formulario
     const handleRegister = async () => {
-        const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
+        const validation = validateRegisterData(form);
+
+        if (!validation.isValid) {
+            setErrors(validation.errors);
             return;
         }
         setErrors({});

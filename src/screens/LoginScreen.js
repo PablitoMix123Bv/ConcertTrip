@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/theme';
 import { InputField } from '../constants/input';
 import { AuthContext } from '../context/AuthContext';
+import { validateLoginData } from '../utils/authValidation';
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,22 +28,16 @@ export default function LoginScreen({ navigation }) {
         ]).start();
     }, []);
 
-    const validate = () => {
-        const newErrors = {};
-        if (!form.email.trim())
-            newErrors.email = 'El correo es obligatorio.';
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-            newErrors.email = 'El formato del correo no es válido.';
-        if (!form.password)
-            newErrors.password = 'La contraseña es obligatoria.';
-        else if (form.password.length < 6)
-            newErrors.password = 'Mínimo 6 caracteres.';
-        return newErrors;
-    };
-
     const handleLogin = async () => {
-        const validationErrors = validate();
-        if (Object.keys(validationErrors).length > 0) { setErrors(validationErrors); return; }
+        const validation = validateLoginData(form.email, form.password);
+
+        if (!validation.isValid) {
+            setErrors({
+                email: validation.error.includes("correo") ? validation.error : null,
+                password: validation.error.includes("contraseña") ? validation.error : null
+            });
+            return;
+        }
         setErrors({});
         setLoading(true);
         try {

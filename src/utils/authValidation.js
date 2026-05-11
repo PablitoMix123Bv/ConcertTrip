@@ -1,4 +1,5 @@
-import { parseJsonSourceFileConfigFileContent } from "typescript";
+// Validación de datos para Login
+// Se usa en AuthContext antes de llamar a Firebase
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -22,4 +23,27 @@ export const validateLoginData = (email, password) => {
     }
 
     return { isValid: true, cleanEmail };
+};
+
+export const validateRegisterData = (form) => {
+    const { nombre, email, ciudad, password } = form;
+    const newErrors = {};
+
+    if (!nombre.trim()) newErrors.nombre = 'El nombre es obligatorio.';
+    if (!email.trim()) {
+        newErrors.email = 'El correo es obligatorio.';
+    } else if (!emailRegex.test(email.trim())) {
+        newErrors.email = 'El formato no es válido.';
+    }
+    if (!ciudad.trim()) newErrors.ciudad = 'La ciudad es obligatoria.';
+    if (!password) {
+        newErrors.password = 'La contraseña es obligatoria.';
+    } else if (password.length < 6) {
+        newErrors.password = 'Mínimo 6 caracteres.';
+    }
+
+    return {
+        isValid: Object.keys(newErrors).length === 0,
+        errors: newErrors
+    };
 };
