@@ -1,8 +1,8 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { auth, db } from "../config/FirebaseConfig"
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from 'firebase/firestore';
-import { signInWithEmailAndPassword } from "../config/FirebaseConfig";
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { signOut } from 'firebase/auth';
 import { validateLoginData } from '../utils/authValidation';
 
@@ -12,8 +12,11 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null); //Se almacenará al usuario loggeado
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true); //Verificación de la sesión.
 
+
+    // Login 
     const login = async (email, password) => {
         const validation = validateLoginData(email, password);
 
@@ -31,23 +34,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    // Registro
     const signUp = async (userData) => {
         const { email, password, nombre, ciudad, rol } = userData;
 
+        // Paso 1. Creación del usuario en Auth
+        let userCredential;
         try {
-            // Paso 1. Creación del usuario en Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const uid = userCredential.user.uid;
 
-            // Paso 2: Crear el perfil del Firestore usando el misomo UID
+            // Paso 2: Crear documento en Firestore con el mismo UID
             await setDoc(doc(db, "usuarios", uid), {
                 nombre: nombre,
                 ciudad: ciudad,
                 rol: rol,
                 createdAt: new Date()
             });
+
+            // Si pasa este punto significa que el usuario ya debe de estar registrado en la BD
+
         } catch (error) {
-            // Eliminicion del usuario registrado en Auth
+            // Eliminicion del usuario registrado en Auth en caso de algún error 
             if (userCredential?.user) {
                 await userCredential.user.delete();
                 console.log("Limpieza exitosa: Usuario eliminado de Auth por fallo en la base de datos")
@@ -66,17 +74,30 @@ export const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        // onAuthStateChanged se activa automáticamente cada vez que alguien o sale de la app.
+        // Se ejecuta automáticamente cuando el usuario inicia o cierra sesión
         // Monitorea de forma asincrona el token de sesión del usuario.
-        const unsubscribe = auth.onAuthStateChanged((userFirebase) => {
-            setUser(userFirebase) //Se guardan los datos (o null si no hay nadie).
+        const unsubscribe = auth.onAuthStateChanged(async (userFirebase) => {
+            if (userFirebase) {
+                // Si hay usuario, buscamos su perfil en Firestore
+                const docRef = doc(db, "usuarios", userFirebase.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    setUserData({ uid: userFirebase.uid, ...docSnap.data() });
+                } else {
+                    setUserData(null);
+                }
+            } else {
+                setUserData(null);
+            }
+            setUser(userFirebase);
             setLoading(false);
         });
-        return unsubscribe
+        return unsubscribe;
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, signUp, logout }}>
+        <AuthContext.Provider value={{ user, userData, loading, login, signUp, logout }}>
             {children}
         </AuthContext.Provider>
     );
