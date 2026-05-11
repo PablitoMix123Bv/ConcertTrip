@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 // ================ PANTALLAS USUARIO AUTENTICADO  ================ 
 import AgencyDetailScreen from './src/screens/AgencyDetailScreen';
 import MyTicketsScreen from './src/screens/MyTicketsScreen';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 
@@ -29,10 +30,8 @@ const AuthStack = () => (
 const AppStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     {/* Pantalla temporal mientras no tienes el Home */}
-    <Stack.Screen
-      name="Placeholder"
-      component={() => <View style={{ flex: 1, backgroundColor: '#EEF3FF' }} />}
-    />
+    <Stack.Screen name="Agency" component={AgencyDetailScreen}/>
+    <Stack.Screen name="MyTickets" component={MyTicketsScreen}/>
   </Stack.Navigator>
 );
 
@@ -62,7 +61,7 @@ const RootNavigation = () => {
 // ─── Raíz de la app 
 export default function App() {
   return (
-    <AuthProvider>
+    <AuthProvider>  
       <SafeAreaProvider>
         <RootNavigation />
       </SafeAreaProvider>
